@@ -1,6 +1,6 @@
 {
   "name": "@procyon-creative/plugin-boilerplate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A WordPress block plugin boilerplate template for @wordpress/create-block with auto-update support and GitHub Actions releases.",
   "keywords": [
     "wordpress",
