@@ -1,29 +1,51 @@
 {
-    "name": "@procyon-creative/plugin-boilerplate",
-    "bin": {
-        "create-block": "./index.js"
-    },
-    "version": "1.0.0",
-    "description": "A WordPress plugin boilerplate.",
-    "engines": {
-        "node": ">=20.10.0",
-        "npm": ">=10.2.3"
-    },
-    "keywords": [
-        "WordPress",
-        "plugin",
-        "boilerplate"
-    ],
-    "author": "Procyon Creative",
-    "license": "GPL-2.0-or-later",
-    "dependencies": {
-        "@inquirer/prompts": "^7.2.0",
-        "@wordpress/scripts": "^30.8.1",
-        "commander": "^9.2.0",
-        "minimist": "^1.2.8"
-    },
-    "scripts": {
-        "lint:js": "wp-scripts lint-js",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    }
+  "name": "@procyon-creative/plugin-boilerplate",
+  "version": "1.0.0",
+  "description": "A WordPress block plugin boilerplate template for @wordpress/create-block with auto-update support and GitHub Actions releases.",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "boilerplate",
+    "create-block",
+    "block-editor",
+    "gutenberg"
+  ],
+  "homepage": "https://github.com/procyon-creative/procyon-plugin-boilerplate#readme",
+  "bugs": {
+    "url": "https://github.com/procyon-creative/procyon-plugin-boilerplate/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/procyon-creative/procyon-plugin-boilerplate.git"
+  },
+  "license": "GPL-2.0-or-later",
+  "author": "Procyon Creative",
+  "bin": {
+    "create-block": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "templates/"
+  ],
+  "engines": {
+    "node": ">=20.10.0",
+    "npm": ">=10.2.3"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.2.0",
+    "@wordpress/scripts": "^30.8.1",
+    "commander": "^9.2.0",
+    "minimist": "^1.2.8"
+  },
+  "scripts": {
+    "lint:js": "wp-scripts lint-js",
+    "test": "jest",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "husky": "^9.1.7",
+    "jest": "^30.4.2"
+  }
 }
