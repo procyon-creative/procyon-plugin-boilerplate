@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Procyon Plugin Boilerplate — scaffold WordPress block plugins</title>
+	<meta name="description" content="A CLI for scaffolding WordPress block plugins with auto-update support and GitHub Actions releases. Published as @procyon-creative/plugin-boilerplate.">
+	<meta property="og:title" content="Procyon Plugin Boilerplate">
+	<meta property="og:description" content="Scaffold WordPress block plugins with auto-updates and GitHub Actions releases.">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://procyon-creative.github.io/procyon-plugin-boilerplate/">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,600;9..144,800;9..144,900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+	<style>
+		:root {
+			--paper: #f1e9d8;
+			--paper-deep: #e7dcc4;
+			--ink: #14110d;
+			--ink-soft: #2b261d;
+			--ink-mute: #6b6356;
+			--rule: #14110d;
+			--cyan: #2cd5de;
+			--magenta: #de1bb0;
+			--yellow: #e8dc31;
+			--orange: #d65d0e;
+			--terminal: #14110d;
+			--terminal-text: #f1e9d8;
+
+			--rule-w: 3px;
+			--page-px: clamp(20px, 4vw, 56px);
+			--max: 1240px;
+		}
+
+		* { box-sizing: border-box; }
+
+		html, body {
+			margin: 0;
+			padding: 0;
+			background: var(--paper);
+			color: var(--ink);
+			font-family: 'IBM Plex Sans', system-ui, sans-serif;
+			font-size: 17px;
+			line-height: 1.55;
+			-webkit-font-smoothing: antialiased;
+			text-rendering: optimizeLegibility;
+		}
+
+		/* Paper grain — subtle SVG noise overlay */
+		body::before {
+			content: '';
+			position: fixed;
+			inset: 0;
+			pointer-events: none;
+			z-index: 1;
+			opacity: 0.35;
+			mix-blend-mode: multiply;
+			background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+		}
+
+		main {
+			position: relative;
+			z-index: 2;
+			max-width: var(--max);
+			margin: 0 auto;
+			padding: 0 var(--page-px);
+		}
+
+		a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+		a:hover { color: var(--magenta); }
+
+		/* ---------- TOP STRIP ---------- */
+		.strip {
+			border-bottom: var(--rule-w) solid var(--rule);
+			background: var(--paper);
+			position: relative;
+			z-index: 3;
+		}
+		.strip-inner {
+			max-width: var(--max);
+			margin: 0 auto;
+			padding: 14px var(--page-px);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 24px;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 12px;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+		.strip-inner b { font-weight: 700; }
+		.strip-nav { display: flex; gap: 22px; }
+		.strip-nav a { text-decoration: none; }
+		.strip-nav a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+		/* ---------- HERO ---------- */
+		.hero {
+			padding: clamp(48px, 8vw, 110px) 0 clamp(40px, 6vw, 80px);
+			position: relative;
+		}
+
+		.eyebrow {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 12px;
+			letter-spacing: 0.18em;
+			text-transform: uppercase;
+			color: var(--ink-mute);
+			margin-bottom: 28px;
+		}
+		.eyebrow .dot {
+			display: inline-block;
+			width: 8px;
+			height: 8px;
+			background: var(--magenta);
+			border-radius: 50%;
+			margin-right: 10px;
+			vertical-align: 1px;
+		}
+
+		.wordmark {
+			position: relative;
+			display: inline-block;
+		}
+		/* Riso-misregistered color blocks behind headline */
+		.wordmark::before,
+		.wordmark::after {
+			content: '';
+			position: absolute;
+			inset: -8px -22px -16px -22px;
+			z-index: -1;
+			mix-blend-mode: multiply;
+			opacity: 0.85;
+		}
+		.wordmark::before {
+			background: var(--cyan);
+			transform: translate(-14px, 8px);
+		}
+		.wordmark::after {
+			background: var(--yellow);
+			transform: translate(18px, -6px);
+		}
+
+		h1 {
+			font-family: 'Fraunces', serif;
+			font-variation-settings: 'opsz' 144, 'SOFT' 50, 'wght' 800;
+			font-weight: 800;
+			font-size: clamp(56px, 10vw, 140px);
+			line-height: 0.92;
+			letter-spacing: -0.02em;
+			margin: 0;
+			color: var(--ink);
+		}
+		h1 em {
+			font-style: italic;
+			font-variation-settings: 'opsz' 144, 'SOFT' 90, 'wght' 800;
+			color: var(--magenta);
+		}
+
+		.lede {
+			font-family: 'Fraunces', serif;
+			font-variation-settings: 'opsz' 36, 'SOFT' 30, 'wght' 400;
+			font-size: clamp(20px, 2.2vw, 28px);
+			line-height: 1.35;
+			max-width: 720px;
+			margin: 36px 0 0;
+			color: var(--ink-soft);
+		}
+
+		/* ---------- INSTALL BLOCK ---------- */
+		.install {
+			margin-top: 56px;
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto;
+			align-items: stretch;
+			border: var(--rule-w) solid var(--rule);
+			background: var(--terminal);
+			color: var(--terminal-text);
+			box-shadow: 8px 8px 0 0 var(--magenta);
+			max-width: 920px;
+		}
+		.install-cmd {
+			padding: 22px 28px;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: clamp(14px, 1.5vw, 18px);
+			line-height: 1.4;
+			overflow-x: auto;
+			white-space: nowrap;
+		}
+		.install-cmd .prompt { color: var(--cyan); user-select: none; margin-right: 12px; }
+		.install-cmd .pkg { color: var(--yellow); }
+		.install-cmd .arg { color: var(--paper); }
+		.install-cmd .flag { color: var(--magenta); }
+
+		.copy-btn {
+			border: 0;
+			border-left: var(--rule-w) solid var(--rule);
+			background: var(--paper);
+			color: var(--ink);
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 11px;
+			letter-spacing: 0.14em;
+			text-transform: uppercase;
+			padding: 0 28px;
+			cursor: pointer;
+			transition: background 0.15s;
+			min-width: 88px;
+		}
+		.copy-btn:hover { background: var(--yellow); }
+		.copy-btn[data-copied="true"] { background: var(--magenta); color: var(--paper); }
+
+		.install-meta {
+			margin-top: 20px;
+			display: flex;
+			gap: 20px;
+			flex-wrap: wrap;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 12px;
+			letter-spacing: 0.06em;
+			color: var(--ink-mute);
+		}
+		.install-meta .badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+		}
+		.install-meta .badge::before {
+			content: '';
+			width: 7px;
+			height: 7px;
+			background: var(--ink);
+			border-radius: 50%;
+		}
+
+		/* ---------- VERSION COLUMN (right of hero on wide screens) ---------- */
+		.hero-grid {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto;
+			gap: clamp(24px, 4vw, 80px);
+			align-items: start;
+		}
+		.version {
+			border: var(--rule-w) solid var(--rule);
+			padding: 18px 22px;
+			background: var(--paper-deep);
+			font-family: 'JetBrains Mono', monospace;
+			min-width: 200px;
+			position: relative;
+		}
+		.version::after {
+			content: '';
+			position: absolute;
+			top: 8px; left: 8px; right: -8px; bottom: -8px;
+			background: var(--cyan);
+			z-index: -1;
+		}
+		.version .label {
+			font-size: 10px;
+			letter-spacing: 0.18em;
+			text-transform: uppercase;
+			color: var(--ink-mute);
+			margin-bottom: 6px;
+		}
+		.version .num {
+			font-family: 'Fraunces', serif;
+			font-variation-settings: 'opsz' 60, 'SOFT' 40, 'wght' 800;
+			font-size: 56px;
+			line-height: 1;
+			letter-spacing: -0.02em;
+			color: var(--ink);
+		}
+		.version .meta {
+			margin-top: 14px;
+			font-size: 11px;
+			letter-spacing: 0.05em;
+			color: var(--ink-soft);
+			line-height: 1.5;
+		}
+		.version .meta a { color: var(--ink); }
+
+		/* ---------- SECTION HEADERS ---------- */
+		.sect {
+			padding: clamp(60px, 8vw, 120px) 0;
+			border-top: var(--rule-w) solid var(--rule);
+			position: relative;
+		}
+		.sect-head {
+			display: grid;
+			grid-template-columns: auto minmax(0, 1fr);
+			gap: 28px;
+			align-items: end;
+			margin-bottom: clamp(40px, 5vw, 70px);
+		}
+		.sect-num {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 12px;
+			letter-spacing: 0.18em;
+			text-transform: uppercase;
+			color: var(--ink-mute);
+			border-bottom: var(--rule-w) solid var(--rule);
+			padding-bottom: 6px;
+		}
+		.sect-title {
+			font-family: 'Fraunces', serif;
+			font-variation-settings: 'opsz' 100, 'SOFT' 30, 'wght' 700;
+			font-size: clamp(36px, 5vw, 64px);
+			line-height: 1;
+			letter-spacing: -0.02em;
+			margin: 0;
+		}
+		.sect-title em {
+			font-style: italic;
+			font-variation-settings: 'opsz' 100, 'SOFT' 80, 'wght' 700;
+		}
+
+		/* ---------- FEATURE CARDS ---------- */
+		.features {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 0;
+			border: var(--rule-w) solid var(--rule);
+			background: var(--paper);
+		}
+		.feature {
+			padding: 36px 32px 40px;
+			border-right: var(--rule-w) solid var(--rule);
+			position: relative;
+			min-height: 320px;
+			display: flex;
+			flex-direction: column;
+		}
+		.feature:last-child { border-right: none; }
+		.feature-num {
+			font-family: 'Fraunces', serif;
+			font-variation-settings: 'opsz' 144, 'SOFT' 80, 'wght' 800;
+			font-size: 96px;
+			line-height: 0.85;
+			letter-spacing: -0.04em;
+			margin-bottom: 28px;
+		}
+		.feature:nth-child(1) .feature-num { color: var(--magenta); }
+		.feature:nth-child(2) .feature-num { color: var(--cyan); }
+		.feature:nth-child(3) .feature-num { color: var(--orange); }
+
+		.feature-title {
+			font-family: 'Fraunces', serif;
+			font-variation-settings: 'opsz' 36, 'SOFT' 30, 'wght' 700;
+			font-size: 24px;
+			line-height: 1.15;
+			margin: 0 0 14px;
+		}
+		.feature-body {
+			font-size: 15px;
+			line-height: 1.55;
+			color: var(--ink-soft);
+			margin: 0;
+		}
+		.feature-body code {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 13px;
+			background: var(--paper-deep);
+			padding: 1px 6px;
+			border-radius: 2px;
+		}
+
+		/* ---------- WHAT-YOU-GET (file tree + sample) ---------- */
+		.struct {
+			display: grid;
+			grid-template-columns: 1.05fr 1fr;
+			gap: 0;
+			border: var(--rule-w) solid var(--rule);
+			background: var(--terminal);
+			color: var(--terminal-text);
+		}
+		.struct > div {
+			padding: 28px 32px;
+		}
+		.struct-tree { border-right: var(--rule-w) solid var(--rule); }
+		.struct-label {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 11px;
+			letter-spacing: 0.18em;
+			text-transform: uppercase;
+			color: var(--ink-mute);
+			margin-bottom: 18px;
+			color: rgba(241, 233, 216, 0.55);
+		}
+		.struct pre {
+			margin: 0;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 13px;
+			line-height: 1.65;
+			white-space: pre;
+			overflow-x: auto;
+		}
+		.struct .dim { color: rgba(241, 233, 216, 0.45); }
+		.struct .tag-cy { color: var(--cyan); }
+		.struct .tag-yl { color: var(--yellow); }
+		.struct .tag-mg { color: var(--magenta); }
+		.struct .tag-or { color: var(--orange); }
+
+		/* ---------- LINKS ---------- */
+		.links {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 0;
+			border: var(--rule-w) solid var(--rule);
+			background: var(--paper-deep);
+		}
+		.link-card {
+			padding: 32px;
+			border-right: var(--rule-w) solid var(--rule);
+			text-decoration: none;
+			color: var(--ink);
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			min-height: 200px;
+			transition: background 0.15s;
+		}
+		.link-card:last-child { border-right: none; }
+		.link-card:hover { background: var(--yellow); }
+		.link-card .which {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 11px;
+			letter-spacing: 0.2em;
+			text-transform: uppercase;
+			color: var(--ink-mute);
+		}
+		.link-card .name {
+			font-family: 'Fraunces', serif;
+			font-variation-settings: 'opsz' 100, 'SOFT' 60, 'wght' 700;
+			font-size: 36px;
+			line-height: 1;
+			letter-spacing: -0.02em;
+			margin-top: 20px;
+		}
+		.link-card .arrow {
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 18px;
+			margin-top: 24px;
+			align-self: flex-start;
+			transition: transform 0.18s;
+		}
+		.link-card:hover .arrow { transform: translateX(8px); }
+
+		/* ---------- FOOTER ---------- */
+		footer {
+			border-top: var(--rule-w) solid var(--rule);
+			padding: 28px 0 60px;
+			margin-top: clamp(60px, 8vw, 100px);
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 11px;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			color: var(--ink-mute);
+			display: flex;
+			justify-content: space-between;
+			gap: 20px;
+			flex-wrap: wrap;
+		}
+		footer .star {
+			display: inline-block;
+			color: var(--magenta);
+			margin: 0 6px;
+			transform: translateY(1px);
+		}
+
+		/* ---------- DECORATIVE STAR (Procyon, top-right) ---------- */
+		.deco {
+			position: absolute;
+			top: clamp(40px, 6vw, 80px);
+			right: var(--page-px);
+			width: clamp(48px, 6vw, 88px);
+			height: clamp(48px, 6vw, 88px);
+			pointer-events: none;
+		}
+
+		/* ---------- RESPONSIVE ---------- */
+		@media (max-width: 860px) {
+			.hero-grid { grid-template-columns: minmax(0, 1fr); }
+			.version { justify-self: start; }
+			.features { grid-template-columns: 1fr; }
+			.feature { border-right: none; border-bottom: var(--rule-w) solid var(--rule); min-height: 0; }
+			.feature:last-child { border-bottom: none; }
+			.struct { grid-template-columns: 1fr; }
+			.struct-tree { border-right: none; border-bottom: var(--rule-w) solid var(--rule); }
+			.links { grid-template-columns: 1fr; }
+			.link-card { border-right: none; border-bottom: var(--rule-w) solid var(--rule); min-height: 0; }
+			.link-card:last-child { border-bottom: none; }
+		}
+
+		@media (max-width: 520px) {
+			.install { grid-template-columns: 1fr; box-shadow: 6px 6px 0 0 var(--magenta); }
+			.copy-btn { border-left: 0; border-top: var(--rule-w) solid var(--rule); padding: 14px 28px; }
+			.strip-nav { gap: 14px; }
+			.strip-inner { font-size: 11px; }
+			.deco { display: none; }
+		}
+
+		/* Reduce motion */
+		@media (prefers-reduced-motion: reduce) {
+			* { transition: none !important; animation: none !important; }
+		}
+	</style>
+</head>
+<body>
+
+<div class="strip">
+	<div class="strip-inner">
+		<div><b>PROCYON CREATIVE</b> · plugin-boilerplate</div>
+		<nav class="strip-nav">
+			<a href="#what">What</a>
+			<a href="#structure">Structure</a>
+			<a href="#links">Links</a>
+		</nav>
+	</div>
+</div>
+
+<main>
+
+	<!-- HERO -->
+	<section class="hero">
+		<svg class="deco" viewBox="0 0 100 100" aria-hidden="true">
+			<g fill="none" stroke="#14110d" stroke-width="2">
+				<circle cx="50" cy="50" r="6" fill="#de1bb0"/>
+				<line x1="50" y1="0" x2="50" y2="22"/>
+				<line x1="50" y1="78" x2="50" y2="100"/>
+				<line x1="0" y1="50" x2="22" y2="50"/>
+				<line x1="78" y1="50" x2="100" y2="50"/>
+				<line x1="14" y1="14" x2="32" y2="32"/>
+				<line x1="68" y1="68" x2="86" y2="86"/>
+				<line x1="86" y1="14" x2="68" y2="32"/>
+				<line x1="32" y1="68" x2="14" y2="86"/>
+			</g>
+		</svg>
+
+		<div class="hero-grid">
+			<div>
+				<div class="eyebrow"><span class="dot"></span>WordPress · Block Editor · Scaffolding CLI</div>
+				<h1><span class="wordmark">Scaffold</span><br>WordPress block<br>plugins, <em>fast</em>.</h1>
+				<p class="lede">A CLI wrapper around <code style="font-family:'JetBrains Mono',monospace;font-size:0.9em;background:var(--paper-deep);padding:2px 6px;">@wordpress/create-block</code> with auto-update support, GitHub Actions releases, and conventional defaults that don't fight the block editor.</p>
+
+				<div class="install" role="region" aria-label="Install command">
+					<div class="install-cmd">
+						<span class="prompt">$</span><span class="pkg">npx&nbsp;@procyon-creative/plugin-boilerplate</span> <span class="arg">my-plugin</span> <span class="flag">--githubAccount</span> <span class="arg">your-handle</span>
+					</div>
+					<button class="copy-btn" id="copy" type="button" data-copied="false" aria-label="Copy install command">Copy</button>
+				</div>
+
+				<div class="install-meta">
+					<span class="badge">MIT-friendly · GPL-2.0-or-later</span>
+					<span class="badge">Node ≥ 20.10</span>
+					<span class="badge">Public on npm</span>
+				</div>
+			</div>
+
+			<aside class="version" aria-label="Latest release">
+				<div class="label">Latest</div>
+				<div class="num">v1.0.2</div>
+				<div class="meta">
+					Auto-released by<br>
+					<a href="https://github.com/googleapis/release-please">release-please</a>.<br>
+					<a href="https://github.com/procyon-creative/procyon-plugin-boilerplate/blob/main/CHANGELOG.md">Changelog →</a>
+				</div>
+			</aside>
+		</div>
+	</section>
+
+	<!-- WHAT IT DOES -->
+	<section class="sect" id="what">
+		<div class="sect-head">
+			<div class="sect-num">01 / What you get</div>
+			<h2 class="sect-title">A plugin that <em>updates itself</em>.</h2>
+		</div>
+
+		<div class="features">
+			<div class="feature">
+				<div class="feature-num">01</div>
+				<h3 class="feature-title">Auto-updating from GitHub</h3>
+				<p class="feature-body">Wires up <code>yahnis-elsts/plugin-update-checker</code> against your release tags. Push a tag, sites running the plugin see an update inside WordPress.</p>
+			</div>
+			<div class="feature">
+				<div class="feature-num">02</div>
+				<h3 class="feature-title">Release-ready GitHub Action</h3>
+				<p class="feature-body">A bundled workflow builds the plugin zip and attaches it to a GitHub release on every tag. Composer + npm steps included; no copy-paste.</p>
+			</div>
+			<div class="feature">
+				<div class="feature-num">03</div>
+				<h3 class="feature-title">Multi-block by default</h3>
+				<p class="feature-body">Blocks live under <code>src/&lt;slug&gt;/</code>. Add another with <code>--no-plugin</code>. Server-rendered (<code>render.php</code>), Interactivity API on the interactive variant.</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- STRUCTURE -->
+	<section class="sect" id="structure">
+		<div class="sect-head">
+			<div class="sect-num">02 / Generated structure</div>
+			<h2 class="sect-title">The shape of <em>a fresh plugin</em>.</h2>
+		</div>
+
+		<div class="struct">
+			<div class="struct-tree">
+				<div class="struct-label">my-plugin/</div>
+<pre><span class="dim">├──</span> <span class="tag-yl">my-plugin.php</span>          <span class="dim">// main plugin file</span>
+<span class="dim">├──</span> <span class="tag-cy">plugin.json</span>            <span class="dim">// updater manifest</span>
+<span class="dim">├──</span> <span class="tag-cy">readme.txt</span>             <span class="dim">// WP.org-style readme</span>
+<span class="dim">├──</span> <span class="tag-mg">composer.json</span>
+<span class="dim">├──</span> .github/
+<span class="dim">│   └──</span> workflows/
+<span class="dim">│       └──</span> <span class="tag-or">main.yml</span>      <span class="dim">// build + release</span>
+<span class="dim">├──</span> src/
+<span class="dim">│   └──</span> my-plugin/
+<span class="dim">│       ├──</span> <span class="tag-yl">block.json</span>
+<span class="dim">│       ├──</span> edit.js
+<span class="dim">│       ├──</span> <span class="tag-mg">render.php</span>
+<span class="dim">│       └──</span> view.js
+<span class="dim">└──</span> build/                  <span class="dim">// (generated)</span>
+</pre>
+			</div>
+			<div>
+				<div class="struct-label">my-plugin.php (excerpt)</div>
+<pre><span class="dim">&lt;?php</span>
+<span class="dim">/**
+ * Plugin Name: My Plugin
+ * Version:     0.1.0
+ */</span>
+
+<span class="tag-cy">use</span> YahnisElsts\PluginUpdateChecker\v5\<span class="tag-yl">PucFactory</span>;
+
+<span class="tag-cy">$updater</span> = <span class="tag-yl">PucFactory</span>::buildUpdateChecker(
+    <span class="tag-mg">'https://github.com/you/my-plugin/'</span>,
+    <span class="tag-cy">__FILE__</span>,
+    <span class="tag-mg">'my-plugin'</span>
+);
+
+<span class="tag-cy">add_action</span>( <span class="tag-mg">'init'</span>, <span class="tag-cy">function</span>() {
+    <span class="tag-yl">register_block_type</span>( __DIR__ . <span class="tag-mg">'/build/my-plugin'</span> );
+} );
+</pre>
+			</div>
+		</div>
+	</section>
+
+	<!-- LINKS -->
+	<section class="sect" id="links">
+		<div class="sect-head">
+			<div class="sect-num">03 / Where to go next</div>
+			<h2 class="sect-title">Pick a <em>direction</em>.</h2>
+		</div>
+
+		<div class="links">
+			<a class="link-card" href="https://www.npmjs.com/package/@procyon-creative/plugin-boilerplate">
+				<div class="which">01 — Install</div>
+				<div class="name">npm</div>
+				<div class="arrow">npmjs.com →</div>
+			</a>
+			<a class="link-card" href="https://github.com/procyon-creative/procyon-plugin-boilerplate">
+				<div class="which">02 — Source</div>
+				<div class="name">Repository</div>
+				<div class="arrow">github.com →</div>
+			</a>
+			<a class="link-card" href="https://github.com/procyon-creative/procyon-plugin-boilerplate/releases">
+				<div class="which">03 — History</div>
+				<div class="name">Releases</div>
+				<div class="arrow">latest →</div>
+			</a>
+		</div>
+	</section>
+
+	<footer>
+		<div>© Procyon Creative <span class="star">✦</span> Released under GPL-2.0-or-later</div>
+		<div>Built with HTML + ✦ + a copy button</div>
+	</footer>
+
+</main>
+
+<script>
+	(function () {
+		var btn = document.getElementById('copy');
+		if (!btn) return;
+		var cmd = 'npx @procyon-creative/plugin-boilerplate my-plugin --githubAccount your-handle';
+		btn.addEventListener('click', function () {
+			var done = function () {
+				btn.dataset.copied = 'true';
+				btn.textContent = 'Copied';
+				setTimeout(function () {
+					btn.dataset.copied = 'false';
+					btn.textContent = 'Copy';
+				}, 1600);
+			};
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(cmd).then(done, function () {
+					fallback();
+				});
+			} else {
+				fallback();
+			}
+			function fallback() {
+				var ta = document.createElement('textarea');
+				ta.value = cmd;
+				ta.style.position = 'fixed';
+				ta.style.opacity = '0';
+				document.body.appendChild(ta);
+				ta.select();
+				try { document.execCommand('copy'); done(); } catch (_) {}
+				document.body.removeChild(ta);
+			}
+		});
+	}());
+</script>
+
+</body>
+</html>
