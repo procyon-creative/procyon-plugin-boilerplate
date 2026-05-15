@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   request:
+    if: contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.pull_request.author_association)
     runs-on: ubuntu-latest
     steps:
       - run: gh pr edit "$PR_URL" --add-reviewer copilot-pull-request-reviewer
