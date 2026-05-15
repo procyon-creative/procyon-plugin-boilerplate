@@ -25,6 +25,7 @@
   },
   "files": [
     "index.js",
+    "lib/",
     "templates/"
   ],
   "engines": {
@@ -40,7 +41,7 @@
   "scripts": {
     "lint:js": "wp-scripts lint-js",
     "test": "jest",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",
