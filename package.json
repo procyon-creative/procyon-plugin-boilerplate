@@ -41,12 +41,16 @@
   "scripts": {
     "lint:js": "wp-scripts lint-js",
     "test": "jest",
+    "test:a11y": "start-server-and-test 'http-server docs -p 8765 -s' http://127.0.0.1:8765 'axe http://127.0.0.1:8765/ --exit'",
     "prepare": "husky || true"
   },
   "devDependencies": {
+    "@axe-core/cli": "^4.11.3",
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
+    "http-server": "^14.1.1",
     "husky": "^9.1.7",
-    "jest": "^30.4.2"
+    "jest": "^30.4.2",
+    "start-server-and-test": "^3.0.5"
   }
 }

@@ -21,13 +21,28 @@
 			--ink: #14110d;
 			--ink-soft: #2b261d;
 			--ink-mute: #6b6356;
+			/* Accessible mute for use on --paper-deep backgrounds (>=4.5:1) */
+			--ink-mute-strong: #4f4839;
 			--rule: #14110d;
+
+			/* Brand riso palette (for backgrounds / large decorative use) */
 			--cyan: #2cd5de;
 			--magenta: #de1bb0;
 			--yellow: #e8dc31;
 			--orange: #d65d0e;
+
+			/* Accessible foreground variants of the brand palette
+			 * tuned to clear WCAG AA contrast on light/dark surfaces. */
+			--cyan-ink: #136369;       /* on --paper, ~4.7:1 */
+			--magenta-ink: #a3137f;    /* on --paper, ~5.6:1 */
+			--cyan-term: #6cf3fb;      /* on --terminal, ~10:1 */
+			--magenta-term: #ff6ed3;   /* on --terminal, ~6.8:1 */
+			--yellow-term: #f0e455;    /* on --terminal */
+
 			--terminal: #14110d;
 			--terminal-text: #f1e9d8;
+			/* Dim text on terminal — kept readable (>=4.5:1) */
+			--terminal-dim: #b8aa8c;
 
 			--rule-w: 3px;
 			--page-px: clamp(20px, 4vw, 56px);
@@ -189,10 +204,10 @@
 			overflow-x: auto;
 			white-space: nowrap;
 		}
-		.install-cmd .prompt { color: var(--cyan); user-select: none; margin-right: 12px; }
-		.install-cmd .pkg { color: var(--yellow); }
+		.install-cmd .prompt { color: var(--cyan-term); user-select: none; margin-right: 12px; }
+		.install-cmd .pkg { color: var(--yellow-term); }
 		.install-cmd .arg { color: var(--paper); }
-		.install-cmd .flag { color: var(--magenta); }
+		.install-cmd .flag { color: var(--magenta-term); }
 
 		.copy-btn {
 			border: 0;
@@ -340,8 +355,8 @@
 			letter-spacing: -0.04em;
 			margin-bottom: 28px;
 		}
-		.feature:nth-child(1) .feature-num { color: var(--magenta); }
-		.feature:nth-child(2) .feature-num { color: var(--cyan); }
+		.feature:nth-child(1) .feature-num { color: var(--magenta-ink); }
+		.feature:nth-child(2) .feature-num { color: var(--cyan-ink); }
 		.feature:nth-child(3) .feature-num { color: var(--orange); }
 
 		.feature-title {
@@ -395,10 +410,10 @@
 			white-space: pre;
 			overflow-x: auto;
 		}
-		.struct .dim { color: rgba(241, 233, 216, 0.45); }
-		.struct .tag-cy { color: var(--cyan); }
-		.struct .tag-yl { color: var(--yellow); }
-		.struct .tag-mg { color: var(--magenta); }
+		.struct .dim { color: var(--terminal-dim); }
+		.struct .tag-cy { color: var(--cyan-term); }
+		.struct .tag-yl { color: var(--yellow-term); }
+		.struct .tag-mg { color: var(--magenta-term); }
 		.struct .tag-or { color: var(--orange); }
 
 		/* ---------- LINKS ---------- */
@@ -427,7 +442,7 @@
 			font-size: 11px;
 			letter-spacing: 0.2em;
 			text-transform: uppercase;
-			color: var(--ink-mute);
+			color: var(--ink-mute-strong);
 		}
 		.link-card .name {
 			font-family: 'Fraunces', serif;
@@ -508,16 +523,16 @@
 </head>
 <body>
 
-<div class="strip">
+<header class="strip">
 	<div class="strip-inner">
 		<div><b>PROCYON CREATIVE</b> · plugin-boilerplate</div>
-		<nav class="strip-nav">
+		<nav class="strip-nav" aria-label="Primary">
 			<a href="#what">What</a>
 			<a href="#structure">Structure</a>
 			<a href="#links">Links</a>
 		</nav>
 	</div>
-</div>
+</header>
 
 <main>
 
@@ -544,7 +559,7 @@
 				<p class="lede">A CLI wrapper around <code style="font-family:'JetBrains Mono',monospace;font-size:0.9em;background:var(--paper-deep);padding:2px 6px;">@wordpress/create-block</code> with auto-update support, GitHub Actions releases, and conventional defaults that don't fight the block editor.</p>
 
 				<div class="install" role="region" aria-label="Install command">
-					<div class="install-cmd">
+					<div class="install-cmd" tabindex="0" aria-label="npx install command (scrollable)">
 						<span class="prompt">$</span><span class="pkg">npx&nbsp;@procyon-creative/plugin-boilerplate</span> <span class="arg">my-plugin</span> <span class="flag">--githubAccount</span> <span class="arg">your-handle</span>
 					</div>
 					<button class="copy-btn" id="copy" type="button" data-copied="false" aria-label="Copy install command">Copy</button>
