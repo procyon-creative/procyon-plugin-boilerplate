@@ -1,7 +1,7 @@
 # GEMINI.md
 
 ## Project Overview
-**Procyon Plugin Boilerplate** is an external template for the `@wordpress/create-block` tool. Its purpose is to scaffold WordPress block plugins with built-in support for:
+**Procyon Plugin Boilerplate** (`@procyon-creative/plugin-boilerplate` on npm) is an external template for the `@wordpress/create-block` tool. Its purpose is to scaffold WordPress block plugins with built-in support for:
 - **Auto-updates:** Integrated via `yahnis-elsts/plugin-update-checker`.
 - **GitHub Actions Releases:** Automates building zip files and creating GitHub releases.
 - **Multi-block Architecture:** Blocks are scaffolded under `src/<slug>/`, allowing a single plugin to contain multiple blocks.
@@ -10,11 +10,14 @@
 **Note:** This repository is a **template**, not a runnable WordPress plugin itself. Commands like `wp-scripts build` should be run in the *generated* plugin, not here.
 
 ## Core Architecture
-- `index.js`: A CLI wrapper that intercepts custom flags (like `--githubAccount`), sets them as environment variables, and then spawns `npx @wordpress/create-block`.
-- `templates/index.js`: The main configuration file for the `@wordpress/create-block` external template. It defines default values, variants, and a `transformer` to inject custom logic.
+- `index.js`: Thin entrypoint that instantiates `lib/CLI` and calls `run()`.
+- `lib/CLI.js`: CLI class — intercepts custom flags (like `--githubAccount`), sets them as environment variables, then spawns `npx @wordpress/create-block`.
+- `lib/TemplateConfig.js`: Encapsulates the default values, variants, transformer, and template paths.
+- `templates/index.js`: The file `@wordpress/create-block` loads — exports a configured `TemplateConfig` instance.
 - `templates/block-templates/`: Mustache templates for block-specific files (PHP, JS, SCSS).
 - `templates/plugin-templates/`: Mustache templates for plugin-level files (Main PHP, GitHub workflows, `plugin.json`).
 - `templates/plugin-assets/`: Static assets (like icons) copied into the generated plugin.
+- `__tests__/`: Jest unit tests for `lib/`.
 
 ## Development Conventions
 - **Code Style:** Tabs for indentation (WordPress standards), enforced via `.editorconfig`.
@@ -22,21 +25,26 @@
   - **Special Case:** `main.yml.mustache` uses `{{=<% %>=}}` to change delimiters to `<%slug%>` to avoid conflicts with GitHub Actions syntax `${{ }}`.
 - **Commits:** Conventional Commits are enforced via `commitlint` and `husky`.
 - **Branching:** Use feature branches (e.g., `feature/WPB-8-fix-variant-path`) and merge via PR. Never commit directly to `main`.
-- **Version Management:** For generated plugins, versions must be manually synced in `readme.txt`, `plugin.json`, and the main PHP file header.
+- **Version Management (this repo):** Automated via [release-please](https://github.com/googleapis/release-please) on `main`. Conventional commits drive version bumps and CHANGELOG generation; merging the release PR publishes to npm via OIDC trusted publishing.
+- **Version Management (generated plugins):** Versions must be manually synced in `readme.txt`, `plugin.json`, and the main PHP file header.
 
 ## Building and Running
 As this is a template, the "building" happens when it is consumed to create a new plugin.
 
-### Scaffolding a New Plugin
+### Scaffolding a New Plugin (recommended — from npm)
 ```bash
-export GITHUB_ACCOUNT=your-username
+npx @procyon-creative/plugin-boilerplate <plugin-slug> --githubAccount your-username --interactive
+```
+
+### Scaffolding from a local clone
+```bash
+export githubAccount=your-username
 npx @wordpress/create-block <plugin-slug> --template=<path-to-this-repo> --interactive
 ```
-*Note: The CLI wrapper allows using `--githubAccount your-username` instead of the environment variable.*
 
 ### Adding a Block to an Existing Plugin
 ```bash
-npx @wordpress/create-block <block-slug> --template=<path-to-this-repo> --interactive --no-plugin
+npx @procyon-creative/plugin-boilerplate <block-slug> --interactive --no-plugin
 ```
 
 ### Local Commands (This Repo)

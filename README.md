@@ -1,26 +1,42 @@
 # Procyon Plugin Boilerplate
+
+[![npm version](https://img.shields.io/npm/v/@procyon-creative/plugin-boilerplate.svg)](https://www.npmjs.com/package/@procyon-creative/plugin-boilerplate)
+
 * Includes an update system using [yahnis-elsts/plugin-update-checker](https://github.com/YahnisElsts/plugin-update-checker)
-* [GitHub Actions template](https://github.com/nicolasgalvez/procyon-plugin-boilerplate/tree/main/plugin-templates/.github/workflows) to build zip files and releases
+* [GitHub Actions template](https://github.com/procyon-creative/procyon-plugin-boilerplate/tree/main/templates/plugin-templates/.github/workflows) to build zip files and releases
 * Variants for static and interactive blocks
 
 ## Description
 A starter project to help create a new WordPress Block Plugin. I found myself doing some of the same tasks over and over. This includes an update system using [yahnis-elsts/plugin-update-checker](https://github.com/YahnisElsts/plugin-update-checker) and a GitHub action to build zip files and releases so you can update the plugin right from WordPress.
 
 ## Usage
+
 ### Prerequisites
 1. Composer
-2. Node/NPM
+2. Node/NPM (>= 20.10.0)
 3. A GitHub account
 
-### Installation
-1. Clone the repo
-2. In your plugins directory, run `export GITHUB_ACCOUNT=nicolasgalvez && npx @wordpress/create-block test --template=<path-to-cloned-repo>/procyon-plugin-boilerplate --interactive`
+### Installation (recommended — from npm)
 
-This will scaffold a new block plugin in the `test` folder.
+```bash
+npx @procyon-creative/plugin-boilerplate <plugin-slug> --githubAccount <your-github-account>
+```
+
+This scaffolds a new block plugin in the `<plugin-slug>` folder using `@wordpress/create-block` under the hood. Add `--interactive` if you want to choose a variant.
+
+### Installation (from a local clone)
+
+If you want to work on the boilerplate itself or need a custom path:
+
+```bash
+git clone git@github.com:procyon-creative/procyon-plugin-boilerplate.git
+cd <your-plugins-directory>
+export githubAccount=<your-github-account>
+npx @wordpress/create-block <plugin-slug> --template=<path-to-cloned-repo> --interactive
+```
+
 > [!NOTE]
-> the `GITHUB_ACCOUNT` is used for the GitHub action and plugin updater. You can't pass the update URI to @wordpress/create-block, so I made a workaround. In the future, I will add a wrapper to allow custom options. But the convention I use is to have a repo with the same name as the the plugin slug.
-
-I'm open to suggestions on how to improve this process. I have already tried adding custom options, but the block-scripts cli process will exit if unknown options are passed, and the template's index.js file is not executed.
+> The `githubAccount` value is used by the GitHub Action and the plugin updater. The npm-installed CLI accepts `--githubAccount` as a flag; for the local-template path you set it as an env var (`@wordpress/create-block` rejects unknown CLI flags). The convention is that the plugin's GitHub repo name matches its slug.
 
 If you want to set the plugin URI or repository manually, you can do so in the `plugin.json` file and the main `plugin.php` file:
 ```json
@@ -47,7 +63,10 @@ Read more [on the plugin-update-checker page](https://github.com/YahnisElsts/plu
 
 ### Adding another block to the plugin
 You can add another block to the plugin using the `--no-plugin` option by navigating to the `src` folder and running:
-`npx @wordpress/create-block other --template=<path-to-cloned-repo>/procyon-plugin-boilerplate --interactive --no-plugin`
+
+```bash
+npx @procyon-creative/plugin-boilerplate other --interactive --no-plugin
+```
 
 The folder structure is as follows:
 ```
@@ -63,31 +82,47 @@ test
 ├── readme.txt  <-- needed for update checker
 ├── ...
 ```
+
 ## Development
 
-
-
 > [!NOTE]
-> I suggest you make the plugin outside your `wp-content/plugins` folder and symlink it to your `plugins` folder. This way you will not lose your development files when you update the plugin from WordPress. WordPress will delete your plugin's folder before it unzips the new one in that location. I've done that when testing the installation process. 😳
+> I suggest you make the plugin outside your `wp-content/plugins` folder and symlink it to your `plugins` folder. This way you will not lose your development files when you update the plugin from WordPress. WordPress will delete your plugin's folder before it unzips the new one in that location. I've done that when testing the installation process.
 
-### Updating a new version
+### Local commands
 
-1. Ensure the readme.txt version is updated
-2. Ensure the plugin.json version is updated
-3. Ensure the version in the main plugin file is updated
-4. Create a new tag for release either at github.com or using git tag v0.1.x -m "message"
-5. Push the tag to github using `git push origin v0.1.x`
+```bash
+npm run lint:js   # ESLint via wp-scripts
+npm test          # Jest unit tests
+```
 
-There is github action that will automatically build the zip file for release and create a new release. The zip file will be available in the release assets. Any site with the plugin installed will now be able to update the plugin.
+### Releasing a new version of this package
+
+This repo uses [release-please](https://github.com/googleapis/release-please) and conventional commits. You don't bump the version manually:
+
+1. Land conventional commits on `main` (e.g. `feat: ...`, `fix: ...`).
+2. release-please opens a PR titled `chore(main): release <version>` with the bumped version + auto-generated `CHANGELOG.md`.
+3. Merging that PR creates a GitHub release and publishes to npm via OIDC trusted publishing — no `NPM_TOKEN` involved.
+
+### Releasing a new version of a generated plugin
+
+For plugins *created* with this boilerplate, three files must have matching version bumps:
+
+1. `readme.txt` — stable tag
+2. `plugin.json` — version field
+3. Main plugin PHP file — header comment version
+
+Then tag and push: `git tag v0.1.x -m "message" && git push origin v0.1.x`
+
+The bundled GitHub Action will build the zip and attach it to the release. Any site with the plugin installed will then be able to update from WordPress.
 
 ## TODO
 - [x] Create a new block plugin
 - [x] Allow multiple blocks per plugin
-- [ ] Add wrapper to allow custom options instead of env variables
-- [x] Update the Github action to build the plugin zip file
+- [x] CLI wrapper to allow custom options instead of only env variables
+- [x] GitHub Action to build the plugin zip file
+- [x] Linting (ESLint via wp-scripts)
+- [x] Tests (Jest)
 - [ ] Clean up the variants
-- [ ] Linting
-- [ ] Tests (BTW, if anyone knows a smooth way to test Github Actions locally, please let me know. I was using act, but it doesn't compile on my M2 Mac)
 - [ ] Test on Windows
 
 ### Variants
