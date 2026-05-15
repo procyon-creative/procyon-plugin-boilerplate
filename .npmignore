@@ -1,7 +1,6 @@
 .github/
 .idea/
 node_modules/
-AGENTS.md
 .gitignore
 .editorconfig
 .nvmrc
