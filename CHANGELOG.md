@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/procyon-creative/procyon-plugin-boilerplate/compare/v1.0.1...v1.0.2) (2026-05-15)
+
+
+### Bug Fixes
+
+* bump commander to ^14.0.3 and adapt to breaking changes ([#17](https://github.com/procyon-creative/procyon-plugin-boilerplate/issues/17)) ([f55dba6](https://github.com/procyon-creative/procyon-plugin-boilerplate/commit/f55dba634310ee386f25b1be20f159640328dea9))
+
 ## [1.0.1](https://github.com/procyon-creative/procyon-plugin-boilerplate/compare/v1.0.0...v1.0.1) (2026-05-15)
 
 
