@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/procyon-creative/procyon-plugin-boilerplate/compare/v1.0.2...v1.1.0) (2026-05-15)
+
+
+### Features
+
+* add axe-core a11y check on landing page in CI ([#22](https://github.com/procyon-creative/procyon-plugin-boilerplate/issues/22)) ([b3c63d2](https://github.com/procyon-creative/procyon-plugin-boilerplate/commit/b3c63d2cbcd0b4959227effa7306c0bfbee483a7))
+* **WPB-18:** add GitHub Pages landing page ([51ee520](https://github.com/procyon-creative/procyon-plugin-boilerplate/commit/51ee520cb7ed39c6394f74d5864e945f0a0d778a))
+
+
+### Bug Fixes
+
+* bump @wordpress/scripts to ^32.2.0 with ESLint flat config ([#21](https://github.com/procyon-creative/procyon-plugin-boilerplate/issues/21)) ([904e208](https://github.com/procyon-creative/procyon-plugin-boilerplate/commit/904e208d91290222cd27768e6462e8156068fd92))
+
 ## [1.0.2](https://github.com/procyon-creative/procyon-plugin-boilerplate/compare/v1.0.1...v1.0.2) (2026-05-15)
 
 
