@@ -9,13 +9,19 @@ This repo is NOT a WordPress plugin itself — it's a template consumed during `
 ## Architecture
 
 ```
-index.js                          CLI wrapper: intercepts custom args (--githubAccount), sets env vars, then spawns npx @wordpress/create-block
+index.js                          Thin entrypoint — instantiates lib/CLI and calls run()
+lib/
+  CLI.js                          CLI class: intercepts custom args (--githubAccount), sets env vars, spawns npx @wordpress/create-block
+  TemplateConfig.js               TemplateConfig class: defaults, variants, transformer, paths
 templates/
-  index.js                        External template config (defaultValues, variants, transformer). This is the core file.
+  index.js                        Exports a TemplateConfig instance — the file @wordpress/create-block actually loads
   block-templates/*.mustache      Per-block files (edit.js, render.php, view.js, styles, etc.)
   plugin-templates/*.mustache     Plugin-level files (main PHP, composer.json, GitHub Actions workflow, plugin.json)
   plugin-assets/                  Static assets copied into generated plugin (icon SVG)
+__tests__/                        Jest unit tests for lib/
 ```
+
+Published to npm as **`@procyon-creative/plugin-boilerplate`** (scoped, public).
 
 ## Key Conventions
 
@@ -37,8 +43,8 @@ templates/
 ## Developer Commands
 
 ```bash
-npm run lint:js     # wp-scripts lint-js (only lint script available)
-npm test            # exits with error — no test framework set up
+npm run lint:js     # wp-scripts lint-js
+npm test            # Jest unit tests (lib/ + __tests__/)
 ```
 
 There is no build, start, or typecheck command for this repo itself — it's a template, not a runnable project.
@@ -77,5 +83,5 @@ The GitHub Actions workflow (in the generated plugin) builds the zip and attache
 - **This is not a plugin.** Don't try to run `wp-scripts build` or `wp start` here — those commands belong in the *generated* output.
 - **Custom env vars**: The root `index.js` passes `--githubAccount` as an env var (`process.env.githubAccount`) because `@wordpress/create-block` rejects unknown CLI flags. The `transformer` in `templates/index.js` reads it back from `process.env`.
 - **Convention: repo name = plugin slug**. The update URI is built as `github.com/<account>/<slug>/` where `<slug>` matches both the folder name and the GitHub repo name.
-- **No tests exist.** The `npm test` script is a placeholder that exits 1.
+- **Tests live under `__tests__/`** and cover `lib/CLI.js` and `lib/TemplateConfig.js`. Run with `npm test`.
 - **Interactive variant uses the same block templates as default.** Both variants share `blockTemplatesPath: join(__dirname, 'block-templates')`. The interactive variant adds `@wordpress/interactivity` and enables interactivity supports.
