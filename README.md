@@ -1,13 +1,15 @@
-# Procyon Plugin Boilerplate
+# Procyon Plugin & Theme Boilerplate
 
 [![npm version](https://img.shields.io/npm/v/@procyon-creative/plugin-boilerplate.svg)](https://www.npmjs.com/package/@procyon-creative/plugin-boilerplate)
 
+* Scaffolds WordPress **block plugins** and **block themes**
 * Includes an update system using [yahnis-elsts/plugin-update-checker](https://github.com/YahnisElsts/plugin-update-checker)
-* [GitHub Actions template](https://github.com/procyon-creative/procyon-plugin-boilerplate/tree/main/templates/plugin-templates/.github/workflows) to build zip files and releases
+* [GitHub Actions templates](https://github.com/procyon-creative/procyon-plugin-boilerplate/tree/main/templates) to build zip files and releases
 * Variants for static and interactive blocks
+* E2E test suite with Lando + Playwright
 
 ## Description
-A starter project to help create a new WordPress Block Plugin. I found myself doing some of the same tasks over and over. This includes an update system using [yahnis-elsts/plugin-update-checker](https://github.com/YahnisElsts/plugin-update-checker) and a GitHub action to build zip files and releases so you can update the plugin right from WordPress.
+A starter project to help create new WordPress block plugins and block themes. Includes an update system using [yahnis-elsts/plugin-update-checker](https://github.com/YahnisElsts/plugin-update-checker) and GitHub Actions to build zip files and releases so you can update right from WordPress.
 
 ## Usage
 
@@ -16,13 +18,27 @@ A starter project to help create a new WordPress Block Plugin. I found myself do
 2. Node/NPM (>= 20.10.0)
 3. A GitHub account
 
-### Installation (recommended — from npm)
+### Creating a Plugin (recommended — from npm)
 
 ```bash
 npx @procyon-creative/plugin-boilerplate <plugin-slug> --githubAccount <your-github-account>
 ```
 
 This scaffolds a new block plugin in the `<plugin-slug>` folder using `@wordpress/create-block` under the hood. Add `--interactive` if you want to choose a variant.
+
+### Creating a Theme
+
+```bash
+npx @procyon-creative/plugin-boilerplate <theme-slug> --type theme --githubAccount <your-github-account>
+```
+
+This scaffolds a new block theme in the `<theme-slug>` folder with:
+- `style.css` with theme headers
+- `functions.php` with PUC auto-update wiring
+- `theme.json` (v3) with default settings
+- Block templates (`templates/index.html`) and template parts (`parts/header.html`, `parts/footer.html`)
+- GitHub Actions workflow for building release zips
+- `composer.json` with PUC dependency
 
 ### Installation (from a local clone)
 
@@ -36,7 +52,7 @@ npx @wordpress/create-block <plugin-slug> --template=<path-to-cloned-repo> --int
 ```
 
 > [!NOTE]
-> The `githubAccount` value is used by the GitHub Action and the plugin updater. The npm-installed CLI accepts `--githubAccount` as a flag; for the local-template path you set it as an env var (`@wordpress/create-block` rejects unknown CLI flags). The convention is that the plugin's GitHub repo name matches its slug.
+> The `githubAccount` value is used by the GitHub Action and the updater. The npm-installed CLI accepts `--githubAccount` as a flag; for the local-template path you set it as an env var (`@wordpress/create-block` rejects unknown CLI flags). The convention is that the repo name matches the slug.
 
 If you want to set the plugin URI or repository manually, you can do so in the `plugin.json` file and the main `plugin.php` file:
 ```json
@@ -91,8 +107,23 @@ test
 ### Local commands
 
 ```bash
-npm run lint:js   # ESLint via wp-scripts
-npm test          # Jest unit tests
+npm run lint:js              # ESLint via wp-scripts
+npm test                     # Jest unit tests
+npm run test:e2e:setup       # Scaffold theme into Lando WordPress
+npm run test:e2e:playwright  # Run Playwright E2E tests
+npm run test:e2e             # Scaffold + Playwright (full E2E)
+```
+
+### E2E Testing
+
+The E2E test suite uses [Lando](https://lando.dev/) with the WordPress recipe and [Playwright](https://playwright.dev/) for browser testing. It scaffolds a theme, deploys it to a local WordPress instance, and verifies it renders correctly.
+
+```bash
+# Start the Lando environment
+lando start
+
+# Scaffold and test
+npm run test:e2e
 ```
 
 ### Releasing a new version of this package
@@ -115,6 +146,18 @@ Then tag and push: `git tag v0.1.x -m "message" && git push origin v0.1.x`
 
 The bundled GitHub Action will build the zip and attach it to the release. Any site with the plugin installed will then be able to update from WordPress.
 
+### Releasing a new version of a generated theme
+
+For themes created with this boilerplate, three files must have matching version bumps:
+
+1. `readme.txt` — stable tag
+2. `style.css` — Version header
+3. `theme.json` — version field (if tracked)
+
+Then tag and push: `git tag v0.1.x -m "message" && git push origin v0.1.x`
+
+The bundled GitHub Action will build the theme zip and attach it to the release. Any site with the theme installed will then be able to update from WordPress.
+
 ## TODO
 - [x] Create a new block plugin
 - [x] Allow multiple blocks per plugin
@@ -122,6 +165,8 @@ The bundled GitHub Action will build the zip and attach it to the release. Any s
 - [x] GitHub Action to build the plugin zip file
 - [x] Linting (ESLint via wp-scripts)
 - [x] Tests (Jest)
+- [x] Theme scaffolding with `--type theme`
+- [x] E2E test suite (Lando + Playwright)
 - [ ] Clean up the variants
 - [ ] Test on Windows
 
