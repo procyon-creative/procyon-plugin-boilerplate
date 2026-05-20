@@ -30,3 +30,6 @@ Temporary Items
 .vscode/
 node_modules/
 test-scaffold/
+wordpress/
+e2e/results/
+e2e/screenshots/
