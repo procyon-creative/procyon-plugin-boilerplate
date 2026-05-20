@@ -1,0 +1,6 @@
+name: e2e-theme-test
+recipe: wordpress
+config: { php: '8.3', via: nginx, webroot: wordpress, database: mariadb, xdebug: false }
+proxy: { appserver_nginx: [e2e-test.lndo.site] }
+services: { appserver: { overrides: { volumes: ['./wordpress:/app/wordpress'] } } }
+tooling: { wp: { service: appserver, cmd: wp } }
