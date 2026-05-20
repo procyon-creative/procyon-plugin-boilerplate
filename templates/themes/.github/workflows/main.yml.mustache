@@ -1,0 +1,53 @@
+{{=<% %>=}}
+name: Build and Zip WordPress Theme
+env:
+  THEME_NAME: <%slug%>
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - 'test'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Create theme zip
+        run: |
+          mkdir -p /tmp/$THEME_NAME
+          cp -r themes/ /tmp/$THEME_NAME/themes/ 2>/dev/null || true
+          cp -r parts/ /tmp/$THEME_NAME/parts/ 2>/dev/null || true
+          cp style.css /tmp/$THEME_NAME/
+          cp index.php /tmp/$THEME_NAME/
+          cp functions.php /tmp/$THEME_NAME/
+          cp theme.json /tmp/$THEME_NAME/
+          cp composer.json /tmp/$THEME_NAME/
+          cp composer.lock /tmp/$THEME_NAME/ 2>/dev/null || true
+          cp -r vendor/ /tmp/$THEME_NAME/vendor/
+          cp readme.txt /tmp/$THEME_NAME/
+          cp screenshot.png /tmp/$THEME_NAME/ 2>/dev/null || true
+          test -f /tmp/$THEME_NAME/style.css
+          test -f /tmp/$THEME_NAME/index.php
+          cd /tmp
+          zip -r $GITHUB_WORKSPACE/$THEME_NAME.zip $THEME_NAME/
+
+      - name: Upload Release Asset
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release'
+        run: gh release upload ${{ github.ref_name }} ./$THEME_NAME.zip
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,32 @@
+<?php
+/**
+ * {{title}} functions and definitions.
+ *
+ * @package {{namespace}}
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+{{#updateURI}}
+$myUpdateChecker = PucFactory::buildUpdateChecker(
+	'{{updateURI}}',
+	__FILE__,
+	'{{slug}}'
+);
+{{/updateURI}}
+{{^updateURI}}
+$myUpdateChecker = PucFactory::buildUpdateChecker(
+	'https://github.com/{{githubAccount}}/{{slug}}/',
+	__FILE__,
+	'{{slug}}'
+);
+{{/updateURI}}
+
+$myUpdateChecker->getVcsApi()->enableReleaseAssets();
+$myUpdateChecker->setBranch( 'main' );
