@@ -1,0 +1,29 @@
+name: E2E
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches: [main, epic/WPB-22-theme-scaffolding]
+  push:
+    branches: [main, epic/WPB-22-theme-scaffolding]
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: 'true'
+      PLAYWRIGHT_BASE_URL: 'http://e2e-test.lndo.site'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Setup Lando
+        uses: lando/setup-lando@v3
+      - name: Start Lando (installs WP, scaffolds theme, activates)
+        run: lando start
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright tests
+        run: npm run test:e2e:playwright

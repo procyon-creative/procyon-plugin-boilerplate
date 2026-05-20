@@ -35,7 +35,7 @@ describe( 'TemplateConfig', () => {
 		expect( fullConfig ).toHaveProperty( 'defaultValues' );
 		expect( fullConfig ).toHaveProperty( 'variants' );
 		expect( fullConfig.pluginTemplatesPath ).toContain(
-			join( 'templates', 'plugin-templates' )
+			join( 'templates', 'plugins' )
 		);
 	} );
 } );
