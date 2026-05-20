@@ -32,12 +32,13 @@
     "node": ">=24.0.0",
     "npm": ">=11.0.0"
   },
-  "dependencies": {
-    "@inquirer/prompts": "^8.4.3",
-    "@wordpress/scripts": "^32.2.0",
-    "commander": "^14.0.3",
-    "minimist": "^1.2.8"
-  },
+	"dependencies": {
+		"@inquirer/prompts": "^8.4.3",
+		"@wordpress/scripts": "^32.2.0",
+		"commander": "^14.0.3",
+		"minimist": "^1.2.8",
+		"mustache": "^4.2.0"
+	},
   "scripts": {
     "lint:js": "wp-scripts lint-js",
     "test": "jest",
