@@ -1,14 +1,16 @@
 {
   "name": "@procyon-creative/plugin-boilerplate",
   "version": "1.1.0",
-  "description": "A WordPress block plugin boilerplate template for @wordpress/create-block with auto-update support and GitHub Actions releases.",
+  "description": "A WordPress block plugin and theme boilerplate template for @wordpress/create-block with auto-update support and GitHub Actions releases.",
   "keywords": [
     "wordpress",
     "plugin",
+    "theme",
     "boilerplate",
     "create-block",
     "block-editor",
-    "gutenberg"
+    "gutenberg",
+    "block-theme"
   ],
   "homepage": "https://github.com/procyon-creative/procyon-plugin-boilerplate#readme",
   "bugs": {
