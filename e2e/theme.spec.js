@@ -21,6 +21,17 @@ function ensureWordPressIsInstalled() {
 	try {
 		runLandoWp( [ 'core', 'is-installed' ] );
 	} catch {
+		runLandoWp( [ 'core', 'download', '--skip-content', '--force' ] );
+		runLandoWp( [
+			'config',
+			'create',
+			'--dbname=wordpress',
+			'--dbuser=wordpress',
+			'--dbpass=wordpress',
+			'--dbhost=database',
+			'--skip-check',
+			'--force',
+		] );
 		runLandoWp( [
 			'core',
 			'install',

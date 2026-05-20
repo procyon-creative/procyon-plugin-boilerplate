@@ -7,4 +7,7 @@
 
 const wpScriptsConfig = require( '@wordpress/scripts/config/eslint.config.cjs' );
 
-module.exports = [ { ignores: [ 'test-scaffold/**' ] }, ...wpScriptsConfig ];
+module.exports = [
+	{ ignores: [ 'test-scaffold/**', 'wordpress/**', 'e2e/results/**' ] },
+	...wpScriptsConfig,
+];
