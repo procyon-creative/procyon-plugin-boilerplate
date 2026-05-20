@@ -56,10 +56,20 @@ describe( 'ThemeTemplateConfig', () => {
 		expect( fullConfig ).toHaveProperty( 'defaultValues' );
 		expect( fullConfig ).toHaveProperty( 'variants' );
 		expect( fullConfig.themeTemplatesPath ).toContain(
-			join( 'templates', 'themes' )
+			join( 'templates', 'themes', 'block-theme' )
 		);
-		expect( fullConfig.themeAssetPath ).toContain(
-			join( 'templates', 'theme-assets' )
+	} );
+
+	it( 'should default to the block-theme template name', () => {
+		const config = new ThemeTemplateConfig( 'test-theme' );
+		expect( config.templateName ).toBe( 'block-theme' );
+	} );
+
+	it( 'should accept a custom template name', () => {
+		const config = new ThemeTemplateConfig( 'test-theme', 'classic' );
+		expect( config.templateName ).toBe( 'classic' );
+		expect( config.getConfig().themeTemplatesPath ).toContain(
+			join( 'templates', 'themes', 'classic' )
 		);
 	} );
 

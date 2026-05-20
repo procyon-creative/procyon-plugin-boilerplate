@@ -1,6 +1,44 @@
-name: e2e-theme-test
+name: e2e-test
 recipe: wordpress
-config: { php: '8.3', via: nginx, webroot: wordpress, database: mariadb, xdebug: false }
-proxy: { appserver_nginx: [e2e-test.lndo.site] }
-services: { appserver: { overrides: { volumes: ['./wordpress:/app/wordpress'] } } }
-tooling: { wp: { service: appserver, cmd: 'wp --path=/app/wordpress' } }
+config:
+  php: '8.3'
+  via: nginx
+  webroot: wordpress
+  xdebug: false
+services:
+  appserver:
+    run:
+      - |
+        set -e
+        WP=/app/wordpress
+        mkdir -p "$WP"
+        if [ ! -f "$WP/wp-blog-header.php" ] || [ ! -f "$WP/wp-settings.php" ]; then
+          if [ -n "$(ls -A "$WP" 2>/dev/null)" ]; then
+            find "$WP" -mindepth 1 -maxdepth 1 ! -name wp-content -exec rm -rf {} +
+          fi
+          wp core download --skip-content
+        fi
+        if [ ! -f "$WP/wp-config.php" ]; then
+          wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=database --skip-check --force
+        fi
+        if ! wp core is-installed 2>/dev/null; then
+          wp core install --url=https://e2e-test.lndo.site --title='E2E Test Site' --admin_user=admin --admin_password=password --admin_email=admin@example.com --skip-email
+        fi
+        if [ "$(wp option get permalink_structure 2>/dev/null)" != "/%postname%/" ]; then
+          wp rewrite structure '/%postname%/' --hard
+        fi
+  node:
+    type: node:24
+    run:
+      - node /app/e2e/setup-scaffold.js
+tooling:
+  wp:
+    service: appserver
+    cmd: wp
+events:
+  post-start:
+    - appserver: |
+        set -e
+        cd /app/wordpress/wp-content/themes/e2e-test-theme
+        composer install --no-interaction --prefer-dist --no-progress
+        wp theme activate e2e-test-theme

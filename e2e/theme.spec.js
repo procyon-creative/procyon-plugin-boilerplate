@@ -74,3 +74,28 @@ test( 'scaffolded block theme is active and renders the homepage', async ( {
 		fullPage: true,
 	} );
 } );
+
+test( 'scaffolded block theme renders the 404 template for missing URLs', async ( {
+	page,
+} ) => {
+	const response = await page.goto( '/this-page-does-not-exist/', {
+		waitUntil: 'domcontentloaded',
+	} );
+
+	expect( response ).not.toBeNull();
+	expect( response.status() ).toBe( 404 );
+
+	await expect( page.locator( '.site-header' ) ).toBeVisible();
+	await expect( page.locator( '.site-footer' ) ).toBeVisible();
+	await expect( page.locator( '.error-404' ) ).toBeVisible();
+	await expect( page.locator( 'body' ) ).toContainText( 'Page not found' );
+
+	const pageContent = await page.content();
+
+	expect( pageContent ).not.toMatch( PHP_ERROR_PATTERN );
+
+	await page.screenshot( {
+		path: path.join( SCREENSHOT_DIR, '404.png' ),
+		fullPage: true,
+	} );
+} );

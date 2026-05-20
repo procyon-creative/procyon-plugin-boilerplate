@@ -66,10 +66,11 @@ describe( 'ThemeScaffolder (real filesystem)', () => {
 		expect( files ).toContain( 'composer.json' );
 		expect( files ).toContain( '.editorconfig' );
 		expect( files ).toContain( '.gitignore' );
-		expect( files ).toContain( 'screenshot.png' );
+		expect( files ).toContain( 'assets/screenshot.png' );
 		expect( files ).toContain( 'parts/header.html' );
 		expect( files ).toContain( 'parts/footer.html' );
 		expect( files ).toContain( 'templates/index.html' );
+		expect( files ).toContain( 'templates/404.html' );
 		expect( files ).toContain( '.github/workflows/main.yml' );
 	} );
 
@@ -191,8 +192,10 @@ describe( 'ThemeScaffolder (real filesystem)', () => {
 		expect( yml ).toContain( '${{ github.ref_name }}' );
 	} );
 
-	it( 'copies screenshot.png from theme-assets', () => {
-		const stat = fs.statSync( path.join( outputDir, 'screenshot.png' ) );
+	it( 'copies screenshot.png into the theme assets folder', () => {
+		const stat = fs.statSync(
+			path.join( outputDir, 'assets', 'screenshot.png' )
+		);
 		expect( stat.size ).toBeGreaterThan( 0 );
 	} );
 
