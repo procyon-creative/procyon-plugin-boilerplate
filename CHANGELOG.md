@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.0](https://github.com/procyon-creative/procyon-plugin-boilerplate/compare/v1.1.0...v1.2.0) (2026-05-20)
+
+
+### Features
+
+* **WPB-20:** add Procyon logo to landing page header and favicon ([56b1761](https://github.com/procyon-creative/procyon-plugin-boilerplate/commit/56b17611b42c77f439ebfa67eb1f70ffe431d784))
+* **WPB-21:** redesign landing page with 80s retro / sci-fi tech aesthetic ([9f3c639](https://github.com/procyon-creative/procyon-plugin-boilerplate/commit/9f3c639fd2829601ca3a11ce465cbf3997073bfd))
+* **WPB-21:** swap landing page display font to Big Shoulders Display ([dfd959d](https://github.com/procyon-creative/procyon-plugin-boilerplate/commit/dfd959d0ff47129088eb23f728b30f19044db267))
+* **WPB-22:** theme scaffolding epic — named templates, 404, lando e2e ([#30](https://github.com/procyon-creative/procyon-plugin-boilerplate/issues/30)) ([fb52017](https://github.com/procyon-creative/procyon-plugin-boilerplate/commit/fb52017f1923de550ad55dddd3532ff768c294f8))
+
 ## [1.1.0](https://github.com/procyon-creative/procyon-plugin-boilerplate/compare/v1.0.2...v1.1.0) (2026-05-15)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@procyon-creative/plugin-boilerplate",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A WordPress block plugin and theme boilerplate template for @wordpress/create-block with auto-update support and GitHub Actions releases.",
   "keywords": [
     "wordpress",
@@ -34,35 +34,35 @@
     "node": ">=24.0.0",
     "npm": ">=11.0.0"
   },
-	"dependencies": {
-		"@inquirer/prompts": "^8.4.3",
-		"@wordpress/scripts": "^32.2.0",
-		"commander": "^14.0.3",
-		"minimist": "^1.2.8",
-		"mustache": "^4.2.0"
-	},
-	"scripts": {
-		"lint:js": "wp-scripts lint-js",
-		"test": "jest",
-		"test:e2e": "node e2e/setup-scaffold.js && npx playwright test",
-		"test:e2e:setup": "node e2e/setup-scaffold.js",
-		"test:e2e:playwright": "npx playwright test",
-		"test:a11y": "start-server-and-test 'http-server docs -p 8765 -s' http://127.0.0.1:8765 'axe http://127.0.0.1:8765/ --exit'",
-		"prepare": "husky || true"
-	},
-	"jest": {
-		"testPathIgnorePatterns": [
-			"/e2e/"
-		]
-	},
-	"devDependencies": {
-		"@axe-core/cli": "^4.11.3",
-		"@commitlint/cli": "^21.0.1",
-		"@commitlint/config-conventional": "^21.0.1",
-		"@playwright/test": "^1.58.2",
-		"http-server": "^14.1.1",
-		"husky": "^9.1.7",
-		"jest": "^30.4.2",
-		"start-server-and-test": "^3.0.5"
-	}
+  "dependencies": {
+    "@inquirer/prompts": "^8.4.3",
+    "@wordpress/scripts": "^32.2.0",
+    "commander": "^14.0.3",
+    "minimist": "^1.2.8",
+    "mustache": "^4.2.0"
+  },
+  "scripts": {
+    "lint:js": "wp-scripts lint-js",
+    "test": "jest",
+    "test:e2e": "node e2e/setup-scaffold.js && npx playwright test",
+    "test:e2e:setup": "node e2e/setup-scaffold.js",
+    "test:e2e:playwright": "npx playwright test",
+    "test:a11y": "start-server-and-test 'http-server docs -p 8765 -s' http://127.0.0.1:8765 'axe http://127.0.0.1:8765/ --exit'",
+    "prepare": "husky || true"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/e2e/"
+    ]
+  },
+  "devDependencies": {
+    "@axe-core/cli": "^4.11.3",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "@playwright/test": "^1.58.2",
+    "http-server": "^14.1.1",
+    "husky": "^9.1.7",
+    "jest": "^30.4.2",
+    "start-server-and-test": "^3.0.5"
+  }
 }
