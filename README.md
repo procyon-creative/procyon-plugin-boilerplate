@@ -126,6 +126,17 @@ lando start
 npm run test:e2e
 ```
 
+### Dependency updates (Dependabot)
+
+[Dependabot](https://docs.github.com/en/code-security/dependabot) opens weekly PRs for npm and GitHub Actions updates. The `.github/workflows/dependabot-auto-merge.yml` workflow auto-approves these PRs and enables squash auto-merge, so GitHub merges them automatically **once the required checks (`lint`, `a11y`, `e2e`) pass**. A failing check leaves the PR open for manual review.
+
+- **Patch and minor** updates auto-merge.
+- **Major** updates are approved/merged manually — the workflow skips them.
+- The `jira-transition-done` check shows as `SKIPPED` on Dependabot branches (it is conditional and does not run for bot PRs). It is a neutral result, not a failure, and must not be a *required* status check — otherwise it would block auto-merge.
+
+> [!NOTE]
+> This relies on **Settings → General → Pull Requests → Allow auto-merge** being enabled, and on branch protection requiring only the real checks (`lint`, `a11y`, `e2e`).
+
 ### Releasing a new version of this package
 
 This repo uses [release-please](https://github.com/googleapis/release-please) and conventional commits. You don't bump the version manually:
