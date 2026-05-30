@@ -35,7 +35,7 @@
     "npm": ">=11.0.0"
   },
 	"dependencies": {
-		"@inquirer/prompts": "^8.4.3",
+		"@inquirer/prompts": "^8.5.1",
 		"@wordpress/scripts": "^32.2.0",
 		"commander": "^15.0.0",
 		"minimist": "^1.2.8",
