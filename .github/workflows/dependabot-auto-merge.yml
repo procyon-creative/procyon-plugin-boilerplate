@@ -1,0 +1,46 @@
+name: Dependabot auto-merge
+
+# Auto-approve and enable auto-merge on Dependabot PRs. GitHub then merges the
+# PR the moment the required status checks (lint, a11y, e2e) pass. Major version
+# bumps are left for manual review.
+#
+# Requires "Allow auto-merge" to be enabled in the repository settings
+# (Settings → General → Pull Requests).
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    # Only act on PRs opened by Dependabot.
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve the PR
+        # Dependabot cannot approve its own PR; do it for patch/minor updates.
+        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-major' }}
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge (squash)
+        # Auto-merge waits for required checks (lint, a11y, e2e) to pass before
+        # merging. A skipped, non-required check such as jira-transition-done
+        # does not block the merge.
+        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-major' }}
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
