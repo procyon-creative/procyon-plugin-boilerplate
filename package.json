@@ -57,7 +57,7 @@
 	},
 	"devDependencies": {
 		"@axe-core/cli": "^4.11.3",
-		"@commitlint/cli": "^21.0.2",
+		"@commitlint/cli": "^21.1.0",
 		"@commitlint/config-conventional": "^21.0.2",
 		"@playwright/test": "^1.61.1",
 		"http-server": "^14.1.1",
